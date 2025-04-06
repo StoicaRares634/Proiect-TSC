@@ -111,8 +111,6 @@ Proiect-TSC Stoica Rares-Nicolae 333CA
 
 
 
-![diagrama]("C:\Users\rares\Desktop\TSC.drawio.png")
-
 
 
 ## Descriere detaliata a functionalitatii hardware

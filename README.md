@@ -111,6 +111,10 @@ Proiect-TSC Stoica Rares-Nicolae 333CA
 
 
 
+![diagrama]("C:\Users\rares\Desktop\TSC.drawio.png")
+
+
+
 ## Descriere detaliata a functionalitatii hardware
 
 Proiectul este construit in jurul microcontroller-ului ESP32-C6 WROOM, care coordoneaza un sistem alimentat dintr-o baterie Li-Po, comunicand cu mai multe periferice si module externe prin interfete standard: I2C, SPI si GPIO.

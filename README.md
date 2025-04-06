@@ -116,7 +116,7 @@ Proiect-TSC Stoica Rares-Nicolae 333CA
 
 ## Descriere detaliata a functionalitatii hardware
 
-Proiectul utilizeaza microcontroller-ul ESP32-C6 WROOM, care este nucleul principal al arhitecturii hardware. Acesta gestioneaza comunicatia cu diverse module prin interfete precum SPI, I2C si GPIO, avand capacitate extinsa pentru conectivitate wireless si control de periferice.
+Proiectul utilizeaza microcontroller-ul ESP32-C6 WROOM. Acesta gestioneaza comunicatia cu diverse module prin interfete SPI, I2C si GPIO, avand capacitate extinsa pentru conectivitate wireless si control de periferice.
 
 ### Structura de alimentare
 
@@ -133,7 +133,7 @@ Proiectul utilizeaza microcontroller-ul ESP32-C6 WROOM, care este nucleul princi
 - Pini ESP32-C6:
   - GPIO4 → SDA
   - GPIO5 → SCL
-- De ce acesti pini?: GPIO4 si GPIO5 sunt GPIO standard cu suport I2C hardware.
+GPIO4 si GPIO5 sunt GPIO standard cu suport I2C hardware.
 
 #### 2. Modul RTC – DS3231SN
 - Interfata: I2C
@@ -149,13 +149,13 @@ Proiectul utilizeaza microcontroller-ul ESP32-C6 WROOM, care este nucleul princi
   - GPIO7 → MISO
   - GPIO8 → MOSI
   - GPIO9 → CS (Flash)
-- Justificare: Aceasta configuratie este conforma cu pinii dedicati SPI al ESP32-C6 pentru performanta maxima.
+Aceasta configuratie este conforma cu pinii dedicati SPI al ESP32-C6 pentru performanta maxima.
 
 #### 4. Modul SD Card
 - Interfata: SPI (partajata cu NOR Flash)
 - Pini ESP32-C6:
   - GPIO10 → CS (SD Card)
-- Nota: Se foloseste acelasi bus SPI ca Flash-ul, dar cu CS separat pentru selectare.
+Se foloseste acelasi bus SPI ca Flash-ul, dar cu CS separat pentru selectare.
 
 #### 5. E-Paper Display
 - Subcomponente:
@@ -166,7 +166,7 @@ Proiectul utilizeaza microcontroller-ul ESP32-C6 WROOM, care este nucleul princi
   - GPIO11 → CS (E-Paper)
   - GPIO12 → RES (Reset)
   - GPIO13 → BUSY (Stare de incarcare)
-- De ce acesti pini?: GPIO11–13 sunt configurabili si sunt utilizati pentru semnale de control specifice E-Paper.
+GPIO11–13 sunt configurabili si sunt utilizati pentru semnale de control specifice E-Paper.
 
 #### 6. Butoane de control (BOOT, RESET, CHANGE)
 - Interfata: GPIO

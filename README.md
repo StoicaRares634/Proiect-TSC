@@ -110,6 +110,7 @@ Proiect-TSC Stoica Rares-Nicolae 333CA
 
 
 
+![diagrama](TSC.drawio.png)
 
 
 

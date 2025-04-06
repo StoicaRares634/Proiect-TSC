@@ -107,3 +107,68 @@ Proiect-TSC Stoica Rares-Nicolae 333CA
 | U3            | DS3231SN#                                                                      | DS3231SN#                                                                      | SOIC127P1032X265-16N                                   | Real Time Clock Serial 16-Pin SOIC W T/R     Check availability                                                                                                                                                                                                                                                                                                                                                                                                                                      | https://www.snapeda.com/parts/DS3231SN%23/Analog+Devices/view-part/?ref=eda                                                                                       |
 | U4            | MAX17048G+T10                                                                  | MAX17048G+T10                                                                  | SON50P200X200X80-9N                                    | Check availability                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | https://www.snapeda.com/parts/MAX17048G+T10/Analog+Devices/view-part/?ref=eda                                                                                     |
 | U5            | MCP73831                                                                       | ESP32_WROVER_SPARKFUN-IC-POWER_MCP73831                                        | ESP32_WROVER_SPARKFUN-IC-POWER_SOT23-5                 | MCP73831T Li-Ion, Li-Pol Controller                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | 7                                                                                                                                                                 |
+
+
+
+
+## Descriere detaliata a functionalitatii hardware
+
+Proiectul este construit in jurul microcontroller-ului ESP32-C6 WROOM, care coordoneaza un sistem alimentat dintr-o baterie Li-Po, comunicand cu mai multe periferice si module externe prin interfete standard: I2C, SPI si GPIO.
+
+### Alimentare si incarcare
+- Conector USB-C: Permite alimentarea externa si comunicatia pentru programare/debug.
+- Controller de incarcare baterie Li-Po (MCP73831): Gestioneaza siguranta si eficienta incarcarii. Se conecteaza intre USB si baterie.
+- Baterie Li-Po: Sursa principala de alimentare portabila.
+- LDO Voltage Regulator (XC6206): Regleaza tensiunea bateriei la 3.3V pentru a alimenta stabil ESP32 si restul circuitului.
+
+### Microcontroller: ESP32-C6 WROOM
+
+ESP32-C6 gestioneaza comunicarile si logica de control a tuturor modulelor periferice. Are conectivitate Wi-Fi 6, Bluetooth 5 si suport pentru Thread si Zigbee (prin radio 802.15.4).
+
+### Module si componente externe conectate
+
+#### Senzori
+- Senzor ambiental BME688 (Bosch)  
+  → Comunicare: I2C  
+  → Functii: temperatura, umiditate, presiune atmosferica, calitate aer  
+  → Conectat la pinii:  
+    - GPIO4 → SDA  
+    - GPIO5 → SCL  
+
+- Modul RTC DS3231SN  
+  → Comunicare: I2C  
+  → Functii: ceas de timp real precis, inclusiv iesire SQW  
+  → Conectat la pinii:  
+    - GPIO4 → SDA (comun cu BME688)  
+    - GPIO5 → SCL  
+
+#### Memorie si stocare
+- Memorie externa NOR Flash 64MB (W25Q512JVEIQ)  
+  → Comunicare: SPI  
+  → Conectata la pinii:  
+    - GPIO6 → SPI CLK  
+    - GPIO7 → SPI MISO  
+    - GPIO8 → SPI MOSI  
+    - GPIO9 → CS (pentru Flash)
+
+- Modul Card SD  
+  → Comunicare: SPI  
+  → Partajeaza aceiasi pini SPI ca Flash-ul, dar cu chip select separat:  
+    - GPIO10 → CS (pentru SD)
+
+#### E-Paper Display
+- Driver circuit e-paper + selector de tip ecran  
+  → Comunicare: SPI  
+  → Conectat la pinii:  
+    - GPIO6-8 (SPI shared)  
+    - GPIO11 → CS pentru E-Paper  
+    - GPIO12, GPIO13 → Control GPIO pentru reset si busy
+
+- E-Paper Header: conector dedicat pentru afisajul e-ink
+
+#### Butoane de control
+- 3 butoane conectate la GPIO-uri pentru interactiune (BOOT, RESET, CHANGE)  
+  → Conectate la:  
+    - GPIO0 → Boot  
+    - GPIO1 → Reset  
+    - GPIO2 → Change

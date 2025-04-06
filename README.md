@@ -116,62 +116,62 @@ Proiect-TSC Stoica Rares-Nicolae 333CA
 
 ## Descriere detaliata a functionalitatii hardware
 
-Proiectul este construit in jurul microcontroller-ului ESP32-C6 WROOM, care coordoneaza un sistem alimentat dintr-o baterie Li-Po, comunicand cu mai multe periferice si module externe prin interfete standard: I2C, SPI si GPIO.
+Proiectul utilizeaza microcontroller-ul ESP32-C6 WROOM, care este nucleul principal al arhitecturii hardware. Acesta gestioneaza comunicatia cu diverse module prin interfete precum SPI, I2C si GPIO, avand capacitate extinsa pentru conectivitate wireless si control de periferice.
 
-### Alimentare si incarcare
-- Conector USB-C: Permite alimentarea externa si comunicatia pentru programare/debug.
-- Controller de incarcare baterie Li-Po (MCP73831): Gestioneaza siguranta si eficienta incarcarii. Se conecteaza intre USB si baterie.
-- Baterie Li-Po: Sursa principala de alimentare portabila.
-- LDO Voltage Regulator (XC6206): Regleaza tensiunea bateriei la 3.3V pentru a alimenta stabil ESP32 si restul circuitului.
+### Structura de alimentare
 
-### Microcontroller: ESP32-C6 WROOM
+- Conector USB-C: asigura alimentarea externa si transferul de date.
+- Controler incarcare baterie Li-Po (MCP73831): integreaza functii de incarcare sigura si controlata a bateriei.
+- Baterie Li-Po: sursa de energie mobila, folosita pentru autonomie.
+- LDO Regulator (XC6206): reduce tensiunea de la baterie la 3.3V stabili, necesari ESP32 si altor componente.
 
-ESP32-C6 gestioneaza comunicarile si logica de control a tuturor modulelor periferice. Are conectivitate Wi-Fi 6, Bluetooth 5 si suport pentru Thread si Zigbee (prin radio 802.15.4).
+### Module conectate la ESP32-C6 si interfetele lor
 
-### Module si componente externe conectate
+#### 1. Senzor ambiental BME688
+- Interfata: I2C
+- Functii: detecteaza temperatura, presiune, umiditate si compusi volatili (calitate aer).
+- Pini ESP32-C6:
+  - GPIO4 → SDA
+  - GPIO5 → SCL
+- De ce acesti pini?: GPIO4 si GPIO5 sunt GPIO standard cu suport I2C hardware.
 
-#### Senzori
-- Senzor ambiental BME688 (Bosch)  
-  → Comunicare: I2C  
-  → Functii: temperatura, umiditate, presiune atmosferica, calitate aer  
-  → Conectat la pinii:  
-    - GPIO4 → SDA  
-    - GPIO5 → SCL  
+#### 2. Modul RTC – DS3231SN
+- Interfata: I2C
+- Functii: mentine timpul real precis, inclusiv in standby.
+- Pini ESP32-C6:
+  - Impartiti cu BME688: GPIO4 (SDA) si GPIO5 (SCL)
 
-- Modul RTC DS3231SN  
-  → Comunicare: I2C  
-  → Functii: ceas de timp real precis, inclusiv iesire SQW  
-  → Conectat la pinii:  
-    - GPIO4 → SDA (comun cu BME688)  
-    - GPIO5 → SCL  
+#### 3. Memorie externa NOR Flash – W25Q512JVEIQ
+- Interfata: SPI
+- Functii: stocare extensiva de date nevolatile (64MB).
+- Pini ESP32-C6:
+  - GPIO6 → CLK
+  - GPIO7 → MISO
+  - GPIO8 → MOSI
+  - GPIO9 → CS (Flash)
+- Justificare: Aceasta configuratie este conforma cu pinii dedicati SPI al ESP32-C6 pentru performanta maxima.
 
-#### Memorie si stocare
-- Memorie externa NOR Flash 64MB (W25Q512JVEIQ)  
-  → Comunicare: SPI  
-  → Conectata la pinii:  
-    - GPIO6 → SPI CLK  
-    - GPIO7 → SPI MISO  
-    - GPIO8 → SPI MOSI  
-    - GPIO9 → CS (pentru Flash)
+#### 4. Modul SD Card
+- Interfata: SPI (partajata cu NOR Flash)
+- Pini ESP32-C6:
+  - GPIO10 → CS (SD Card)
+- Nota: Se foloseste acelasi bus SPI ca Flash-ul, dar cu CS separat pentru selectare.
 
-- Modul Card SD  
-  → Comunicare: SPI  
-  → Partajeaza aceiasi pini SPI ca Flash-ul, dar cu chip select separat:  
-    - GPIO10 → CS (pentru SD)
+#### 5. E-Paper Display
+- Subcomponente:
+  - Circuit de tip e-paper + selector de tip ecran
+  - Header pentru display
+- Interfata: SPI
+- Pini ESP32-C6:
+  - GPIO11 → CS (E-Paper)
+  - GPIO12 → RES (Reset)
+  - GPIO13 → BUSY (Stare de incarcare)
+- De ce acesti pini?: GPIO11–13 sunt configurabili si sunt utilizati pentru semnale de control specifice E-Paper.
 
-#### E-Paper Display
-- Driver circuit e-paper + selector de tip ecran  
-  → Comunicare: SPI  
-  → Conectat la pinii:  
-    - GPIO6-8 (SPI shared)  
-    - GPIO11 → CS pentru E-Paper  
-    - GPIO12, GPIO13 → Control GPIO pentru reset si busy
-
-- E-Paper Header: conector dedicat pentru afisajul e-ink
-
-#### Butoane de control
-- 3 butoane conectate la GPIO-uri pentru interactiune (BOOT, RESET, CHANGE)  
-  → Conectate la:  
-    - GPIO0 → Boot  
-    - GPIO1 → Reset  
-    - GPIO2 → Change
+#### 6. Butoane de control (BOOT, RESET, CHANGE)
+- Interfata: GPIO
+- Pini ESP32-C6:
+  - GPIO0 → BOOT
+  - GPIO1 → RESET
+  - GPIO2 → CHANGE
+- Utilitate: ofera control manual pentru operatii precum boot, test sau configurare.
